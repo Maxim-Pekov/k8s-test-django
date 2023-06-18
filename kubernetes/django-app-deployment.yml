@@ -21,39 +21,40 @@ spec:
           - name: SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: django-app-secret
+                name: django-app-secret-v
                 key: SECRET_KEY
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
-                name: django-app-secret
+                name: django-app-secret-v
                 key: DATABASE_URL
           - name: DEBUG
             valueFrom:
               secretKeyRef:
-                name: django-app-secret
+                name: django-app-secret-v
                 key: DEBUG
           - name: ALLOWED_HOST
             valueFrom:
               secretKeyRef:
-                name: django-app-secret
+                name: django-app-secret-v
                 key: ALLOWED_HOSTS
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: django-app-service
-  labels:
-    app.kubernetes.io/name: django-app-service
-spec:
-  selector:
-    app.kubernetes.io/name: django_app
-  ports:
-    - name: app-listener
-      protocol: TCP
-      port: 80
-  type: NodePort
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: django-app-service
+#  labels:
+#    app.kubernetes.io/name: django-app-service
+#spec:
+#  selector:
+#    app.kubernetes.io/name: django_app
+#  ports:
+#    - name: app-listener
+#      protocol: TCP
+#      port: 80
+#      targetPort: 80
+#  type: NodePort
