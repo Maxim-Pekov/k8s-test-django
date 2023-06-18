@@ -4,9 +4,11 @@ metadata:
   name: django-clearsessions
 spec:
   schedule: "0 0 1 */1 *"  # Создает Job каждый месяц первого числа
+  startingDeadlineSeconds: 40 # На сколько можно просрочить запуск job
   jobTemplate:
     spec:
-      ttlSecondsAfterFinished: 30 # Удаляет job через 30сек. после завершения
+      ttlSecondsAfterFinished: 50 # Удаляет job через 50сек. после завершения
+      backoffLimit: 3 # Кол-во попыток которые делает job для запуска Pod
       template:
         spec:
           containers:
@@ -26,6 +28,6 @@ spec:
                   secretKeyRef:
                     name: django-app-secret-v
                     key: DATABASE_URL
-          restartPolicy: Never
+          restartPolicy: Never # Обязательно ставин Never, чтобы контейнер не перезапускался вечно
 
 

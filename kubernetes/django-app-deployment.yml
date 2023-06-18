@@ -42,19 +42,31 @@ spec:
         ports:
         - containerPort: 80
 
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: django-app-service
-#  labels:
-#    app.kubernetes.io/name: django-app-service
-#spec:
-#  selector:
-#    app.kubernetes.io/name: django_app
-#  ports:
-#    - name: app-listener
-#      protocol: TCP
-#      port: 80
-#      targetPort: 80
-#  type: NodePort
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: django-migrate
+spec:
+  ttlSecondsAfterFinished: 50 # Удаляет job через 50сек. после завершения
+  backoffLimit: 3 # Кол-во попыток которые делает job для запуска Pod
+  template:
+    spec:
+      containers:
+
+      - name: django-app
+        image: hell:latest
+        imagePullPolicy: IfNotPresent
+        command: ["./manage.py", "migrate", "--no-input"]
+        env:
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret-v
+                key: SECRET_KEY
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: django-app-secret-v
+                key: DATABASE_URL
+      restartPolicy: Never
