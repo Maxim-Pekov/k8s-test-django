@@ -32,3 +32,66 @@ $ docker-compose run web ./manage.py createsuperuser
 `ALLOWED_HOSTS` -- настройка Django со списком разрешённых адресов. Если запрос прилетит на другой адрес, то сайт ответит ошибкой 400. Можно перечислить несколько адресов через запятую, например `127.0.0.1,192.168.0.1,site.test`. [Документация Django](https://docs.djangoproject.com/en/3.2/ref/settings/#allowed-hosts).
 
 `DATABASE_URL` -- адрес для подключения к базе данных PostgreSQL. Другие СУБД сайт не поддерживает. [Формат записи](https://github.com/jacobian/dj-database-url#url-schema).
+
+# Как развернуть DEV версию приложения в кластере k8s
+
+## Установка
+
+Используйте данную инструкцию по установке этого скрипта
+
+1. Установить
+
+```python
+git clone https://github.com/Maxim-Pekov/k8s-test-django.git
+```
+
+2. Скачайте minikube по интсрукции `https://minikube.sigs.k8s.io/docs/start/`:
+
+3. Запустите minikube командой:
+```python
+minikube start
+```
+
+4. Перейдите в директорию `kubernetes`
+
+5. Создайте файл  `django-app-secret.yml`, со следующим содержимым, в 
+   разделе data впишите данные своего приложения и данные подключения к 
+   базе предварительно закодируйте по протоколу `base64`:
+```shell
+apiVersion: v1
+kind: Secret
+metadata:
+  name: django-app-secret-v9
+type: Opaque
+data:
+  SECRET_KEY: MTIzN
+  DEBUG: VHJ1Z
+  DATABASE_URL: cG9zdGdyZXM6Ly90ZXN0X2s4czpPd090QmVwOUZydXRAcG9zdGdyZXNxbC1zZXJ2OjU
+  ALLOWED_HOSTS: WycqJ
+  POSTGRES_USER: dGVzdF
+  POSTGRES_PASSWORD: T3dPdEJlcD
+  POSTGRES_DB: dGVzdF9
+```
+6. Примените в кластере все манифесты командой:
+```shell
+kubectl apply -f ./
+```
+
+7. Узнайте IP для подключения к кластеру:
+```shell
+minikube ip
+```
+
+8. Выполните команду для задания локального доменного имени:
+```shell
+nano /etc/hosts
+```
+
+9. Напишите в верхней строчке ip полученый в прошлом шаге, а через пробел 
+   нужный домен и сохраните файл:
+```shell
+<- ip ->  www.star.test
+```
+
+10. Теперь можете протестировать работу сайта, набрав в браузере локальной 
+    машины `www.star.test`
