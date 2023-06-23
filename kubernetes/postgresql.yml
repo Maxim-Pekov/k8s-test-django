@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgresql-serv
+  labels:
+    name: postgresql
+spec:
+  selector:
+    name: postgresql
+  ports:
+    - name: tcp-postgresql
+      protocol: TCP
+      port: 5432
+  type: ClusterIP
