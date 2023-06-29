@@ -65,16 +65,16 @@ metadata:
 type: Opaque
 data:
   SECRET_KEY: MTIzN
-  DEBUG: VHJ1Z
-  DATABASE_URL: cG9zdGdyZXM6Ly90ZXN0X2s4czpPd090QmVwOUZydXRAcG9zdGdyZXNxbC1zZXJ2OjU
-  ALLOWED_HOSTS: WycqJ
+  DEBUG: VHJ1Z #True
+  DATABASE_URL: cG9zdGdyZXM6Ly90ZXN0X2s4czpPd090QmVwOUZydXRAcG9zdGdyZXNxbC1zZXJ2OjU  #postgres://test:test@postgresql-serv:5432/test
+  ALLOWED_HOSTS: d3d3LnN0YXIudGVzdA== #www.star.test
   POSTGRES_USER: dGVzdF
   POSTGRES_PASSWORD: T3dPdEJlcD
   POSTGRES_DB: dGVzdF9
 ```
 6. Примените в кластере все манифесты командой:
 ```shell
-kubectl apply -f ./
+kubectl apply -f ./ --validate=false
 ```
 
 7. Узнайте IP для подключения к кластеру:

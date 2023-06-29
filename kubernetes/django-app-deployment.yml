@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: django-app
-        image: hell:latest
+        image: fenixx/django_app:latest
         env:
           - name: SECRET_KEY
             valueFrom:
@@ -33,7 +33,7 @@ spec:
               secretKeyRef:
                 name: django-app-secret-v9
                 key: DEBUG
-          - name: ALLOWED_HOST
+          - name: ALLOWED_HOSTS
             valueFrom:
               secretKeyRef:
                 name: django-app-secret-v9
@@ -55,7 +55,7 @@ spec:
       containers:
 
       - name: django-app
-        image: hell:latest
+        image: fenixx/django_app:latest
         imagePullPolicy: IfNotPresent
         command: ["./manage.py", "migrate", "--no-input"]
         env:
@@ -67,4 +67,6 @@ spec:
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
+                name: django-app-secret-v9
+                key: DATABASE_URL
       restartPolicy: Never
