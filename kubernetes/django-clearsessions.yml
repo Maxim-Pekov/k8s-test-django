@@ -22,12 +22,12 @@ spec:
               - name: SECRET_KEY
                 valueFrom:
                   secretKeyRef:
-                    name: django-app-secret-v
+                    name: django-app-secret-v21
                     key: SECRET_KEY
               - name: DATABASE_URL
                 valueFrom:
                   secretKeyRef:
-                    name: django-app-secret-v
+                    name: django-app-secret-v21
                     key: DATABASE_URL
           restartPolicy: Never # Обязательно ставин Never, чтобы контейнер не перезапускался вечно
 

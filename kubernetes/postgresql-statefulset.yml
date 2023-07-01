@@ -20,15 +20,16 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: django-app-secret-v9
+                  name: django-app-secret-v18
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: django-app-secret-v9
+                  name: django-app-secret-v18
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
-                  name: django-app-secret-v9
+                  name: django-app-secret-v18
                   key: POSTGRES_DB
+
