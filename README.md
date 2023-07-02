@@ -3,6 +3,7 @@
 Докеризированный сайт на Django для экспериментов с Kubernetes.
 
 Внутри конейнера Django запускается с помощью Nginx Unit, не путать с Nginx. Сервер Nginx Unit выполняет сразу две функции: как веб-сервер он раздаёт файлы статики и медиа, а в роли сервера-приложений он запускает Python и Django. Таким образом Nginx Unit заменяет собой связку из двух сервисов Nginx и Gunicorn/uWSGI. [Подробнее про Nginx Unit](https://unit.nginx.org/).
+## Рабочую версию приложения можно увидеть по адресу `max-k8s.site`
 
 ## Как запустить dev-версию
 
@@ -95,3 +96,53 @@ nano /etc/hosts
 
 10. Теперь можете протестировать работу сайта, набрав в браузере локальной 
     машины `www.star.test`
+
+# Как развернуть PROD версию приложения в кластере k8s
+
+## Установка
+
+Используйте данную инструкцию по установке этого скрипта
+
+1. Установить
+
+```python
+git clone https://github.com/Maxim-Pekov/k8s-test-django.git
+```
+
+2. Разверните кластер k8s в облаке, например в [VK CLOUD](https://mcs.mail.ru/app/)
+
+3. После того как развернули в облаке кластер, скачайте файл настроек подключения `kubernetes-cluster-5180_kubeconfig.yaml`, с похожим названием.
+4. Поместите его у себя на локальной машине в директорию `/home/user/.kube/`
+5. Скачайте на локальный комп `kubectl`, для работы с удаленным кластером
+6. Для подключения к удаленному кластеру, сконфигурируйте настройки:
+```python
+export KUBECONFIG=/home/user/.kube/kubernetes-cluster-5180_kubeconfig.yaml
+```
+7. Перейдите в директорию `kubernetes`
+
+8. Создайте файл  `django-app-secret.yml`, со следующим содержимым, в 
+   разделе data впишите данные своего приложения и данные подключения к 
+   базе предварительно закодируйте по протоколу `base64`:
+```shell
+apiVersion: v1
+kind: Secret
+metadata:
+  name: django-app-secret-v9
+type: Opaque
+data:
+  SECRET_KEY: MTIzN
+  DEBUG: VHJ1Z #True
+  DATABASE_URL: cG9zdGdyZXM6Ly90ZXN0X2s4czpPd090QmVwOUZydXRAcG9zdGdyZXNxbC1zZXJ2OjU  #postgres://test:test@postgresql-serv:5432/test
+  ALLOWED_HOSTS: bWF4LWs4cy5zaXRl #max-k8s.site
+  POSTGRES_USER: dGVzdF
+  POSTGRES_PASSWORD: T3dPdEJlcD
+  POSTGRES_DB: dGVzdF9
+```
+9. Примените в кластере все манифесты командой:
+```shell
+kubectl apply -f ./ --validate=false
+```
+
+10. Выполните команду `kubectl get svc`, скопируйте EXTERNAL-IP адрес сервиса с типом LoadBalancer, и привяжите к нему свое доменное имя.
+
+11. Теперь можете протестировать работу сайта, набрав в браузере выбранное вами Доменное имя.
